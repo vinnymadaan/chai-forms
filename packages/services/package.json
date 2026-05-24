@@ -13,6 +13,7 @@
     "@repo/database": "workspace:*",
     "@repo/logger": "workspace:*",
     "google-auth-library": "^10.5.0",
-    "zod": "^4.3.5"
+    "zod": "^4.3.5",
+    "drizzle-orm": "^0.45.1"
   }
 }
