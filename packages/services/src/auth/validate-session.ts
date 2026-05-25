@@ -15,6 +15,9 @@ export async function validateSession(sessionToken: string) {
     return null;
   }
 
+  console.log("SESSION TOKEN:", sessionToken);
+  console.log("SESSION:", session);
+
   return {
     ...session,
     user: null,

@@ -5,19 +5,29 @@ import { useRouter } from "next/navigation";
 
 import { trpc } from "@/trpc/client";
 
+function createSlug(title: string) {
+  const base = title
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  return `${base || "form"}-${Date.now().toString(36)}`;
+}
+
 export default function CreateFormPage() {
   const router = useRouter();
 
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
+  const [description, setDescription] =
+    useState("");
 
-  const createForm = trpc.forms.create.useMutation({
-    onSuccess: (data:any) => {
-      console.log(data);
-
-      router.push("/dashboard");
-    },
-  });
+  const createForm =
+    trpc.forms.create.useMutation({
+      onSuccess: () => {
+        router.push("/dashboard");
+      },
+    });
 
   const handleSubmit = async (
     e: React.FormEvent,
@@ -27,6 +37,15 @@ export default function CreateFormPage() {
     createForm.mutate({
       title,
       description,
+      slug: createSlug(title),
+      fields: [
+        {
+          type: "short_text",
+          label: "Untitled question",
+          required: false,
+          fieldOrder: 0,
+        },
+      ],
     });
   };
 
@@ -68,7 +87,9 @@ export default function CreateFormPage() {
             <textarea
               value={description}
               onChange={(e) =>
-                setDescription(e.target.value)
+                setDescription(
+                  e.target.value,
+                )
               }
               className="min-h-[120px] w-full rounded-xl border px-4 py-3"
               placeholder="Enter form description"

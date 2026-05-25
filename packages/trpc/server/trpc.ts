@@ -27,5 +27,5 @@ const enforceUserIsAuthed = tRPCContext.middleware(
   },
 );
 
-export const protectedProcedure: any =
+export const protectedProcedure =
   tRPCContext.procedure.use(enforceUserIsAuthed);

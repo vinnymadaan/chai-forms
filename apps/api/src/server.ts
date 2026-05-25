@@ -11,6 +11,7 @@ import * as trpcExpress from "@trpc/server/adapters/express";
 import { serverRouter, createContext } from "@repo/trpc/server";
 
 import { env } from "./env";
+import { tr } from "zod/v4/locales";
 
 export const app = express();
 
@@ -18,7 +19,8 @@ export const app = express();
 if (env.NODE_ENV !== "prod") {
   app.use(
     cors({
-      origin: "*",
+      origin: "http://localhost:3000",
+      credentials: true,
     }),
   );
 }
@@ -63,6 +65,7 @@ app.get("/auth/google/callback", async (req, res) => {
         secure: false,
         sameSite: "lax",
         maxAge: 1000 * 60 * 60 * 24 * 30,
+        path: "/"
       },
     );
 

@@ -44,7 +44,7 @@ export async function createForm(creatorId: string, input: CreateFormInput) {
 
     helperText: field.helperText,
 
-    required: field.required.toString(),
+    required: field.required,
 
     fieldOrder: field.fieldOrder,
 

@@ -23,7 +23,7 @@ export const createContext = async ({
       session: null,
     };
   }
-
+  console.log("COOKIES:", req.cookies);
   const sessionData = await validateSession(sessionToken);
 
   if (!sessionData) {
@@ -38,7 +38,9 @@ export const createContext = async ({
   return {
     req,
     res,
-    user: sessionData.user,
+    user: {
+      id: sessionData.userId,
+    },
     session: sessionData,
   };
 };
