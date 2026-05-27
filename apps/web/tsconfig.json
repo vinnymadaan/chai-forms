@@ -3,7 +3,6 @@
 
   "compilerOptions": {
     "baseUrl": ".",
-    "ignoreDeprecations": "6.0",
     "moduleResolution": "bundler",
     "jsx": "preserve",
     "allowJs": true,
