@@ -19,5 +19,9 @@ export async function createSession(userId: string) {
     })
     .returning();
 
+  if (!session) {
+    throw new Error("Failed to create session in database");
+  }
+
   return session;
 }

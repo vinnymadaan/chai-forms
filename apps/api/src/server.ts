@@ -5,29 +5,48 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import { userService } from "@repo/trpc/server/services";
 import * as trpcExpress from "@trpc/server/adapters/express";
-
-
+import { generateOpenApiDocument } from "trpc-to-openapi";
+import { apiReference } from "@scalar/express-api-reference";
 
 import { serverRouter, createContext } from "@repo/trpc/server";
 
 import { env } from "./env";
-import { tr } from "zod/v4/locales";
 
 export const app = express();
 
-
-
-  app.use(
-    cors({
-      origin: ['https://streamyst-web.vercel.app'],
-
-      credentials: true,
-    })
-  );
-
+app.use(
+  cors({
+    origin: ['https://streamyst-web.vercel.app', 'http://localhost:3000'],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
+
+// Generate OpenAPI spec using trpc-to-openapi
+const openApiDocument = generateOpenApiDocument(serverRouter as any, {
+  title: "Streamyst API Reference",
+  description: "Form builder SaaS API documentation",
+  version: "1.0.0",
+  baseUrl: `${env.BASE_URL || 'http://localhost:10000'}/trpc`,
+});
+
+// Serve OpenAPI JSON spec
+app.get("/openapi.json", (req, res) => {
+  res.json(openApiDocument);
+});
+
+// Serve Scalar API reference
+app.use(
+  "/reference",
+  apiReference({
+    spec: {
+      content: openApiDocument,
+    },
+  })
+);
+
 app.get("/", (req, res) => {
   return res.json({ message: "Streamyst is up and running..." });
 });
