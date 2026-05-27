@@ -19,9 +19,10 @@ export const app = express();
 if (env.NODE_ENV !== "prod") {
   app.use(
     cors({
-      origin: "http://localhost:3000",
+      origin: ['http://localhost:3000', 'https://streamyst-web.vercel.app'],
+
       credentials: true,
-    }),
+    })
   );
 }
 
