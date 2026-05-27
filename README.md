@@ -1,96 +1,107 @@
-# ⚡️ Streamyst Form Builder SaaS
+# ⚡ Streamyst: Production-Grade Typeform-Style Form Builder SaaS
 
-Streamyst is a highly premium, production-style, Typeform-inspired dynamic form builder SaaS monorepo built for speed, safety, and visual excellence. It features dynamic form creation, responsive layouts, unhandled error logging, and custom styling.
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js)](https://nextjs.org/)
+[![tRPC](https://img.shields.io/badge/tRPC-v11-25c2a0?style=for-the-badge&logo=trpc)](https://trpc.io/)
+[![Drizzle ORM](https://img.shields.io/badge/Drizzle_ORM-v0.30-c5f74f?style=for-the-badge&logo=drizzle)](https://orm.drizzle.team/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon_Cloud-336791?style=for-the-badge&logo=postgresql)](https://neon.tech/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue?style=for-the-badge&logo=typescript)](https://www.typescriptlang.org/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind_CSS-3.x-06B6D4?style=for-the-badge&logo=tailwindcss)](https://tailwindcss.com/)
 
----
-
-## 🚀 Core Stack
-* **Monorepo Manager**: [Turborepo](https://turbo.build/)
-* **Type-Safe APIs**: [tRPC](https://trpc.io/)
-* **Database ORM**: [Drizzle ORM](https://orm.drizzle.team/) with PostgreSQL (Neon DB)
-* **Validation Engine**: [Zod](https://zod.dev/)
-* **API Documentation**: [Scalar API Reference](https://scalar.com/)
-* **Framework**: [Next.js (App Router)](https://nextjs.org/) & Express
+**Streamyst** is a highly premium, production-ready, Typeform-inspired dynamic form builder SaaS monorepo built for speed, type safety, and extreme visual excellence. It features robust dynamic fields creation, visual theme styling, public response submission, real-time mathematical statistics analytics, and self-generating Scalar API interactive playgrounds.
 
 ---
 
-## 🔒 Advanced Authentication & Token Infrastructure
-To provide a secure and robust production-ready SaaS environment, Streamyst implements a standard authentication pipeline with advanced token security:
-* **Cookies**: Session tokens, access tokens, and refresh tokens are stored securely in the browser using `httpOnly`, `secure: true`, and `sameSite: "none"` cookie profiles.
-* **JWT Access Tokens**: On successful authentication, the server signs a short-lived (1-hour) JWT access token containing standard identity claims (`userId`, `email`).
-* **JWT Refresh Tokens**: Generates a long-lived (30-day) JWT refresh token to facilitate seamless background session refreshes.
-* **Database Sessions**: Co-exists with a database-backed session verification table for maximum revocation power.
+## ✨ Primary Features
+
+### 🛠️ Dynamic Multi-Field Form Builder
+Creators can build dynamic form schemas using 8 fully featured question input types:
+*   **Short Text & Long Text** (customizable placeholders)
+*   **Email & Number** (with strict formatting constraints)
+*   **Single Select & Multi Select** (dynamic comma-separated options builder UI)
+*   **Star Rating** (interactive 1-to-5 star scale selector)
+*   **Calendar Date Picker** (native date validation)
+
+### 📊 Dynamic Submissions & Math Analytics Dashboard
+Instead of viewing raw data arrays, creators have a unified **Submissions** center containing:
+*   **All Responses Tab:** Chronological logs of every individual submission, beautifully formatted with precise timestamps.
+*   **Analytics Insights Tab:** Automatically analyzes submissions. For **Number** and **Rating** fields, it dynamically computes **Average**, **Minimum**, and **Maximum** values. For text inputs, it displays a scrollable log of individual entries.
+
+### 🔒 SaaS-Grade Token Auth Pipeline
+*   **Secure Session Cookies:** Encapsulates state inside secure, HTTP-only browser cookies using `httpOnly`, `secure: true`, and `sameSite` profiles.
+*   **JWT Access Tokens:** Issues a 1-hour signed JWT access token for instant, stateless verification.
+*   **JWT Refresh Tokens:** Issues a 30-day signed JWT refresh token for seamless background session prolonging.
+*   **Database Sessions:** Pairs tokens with an query-optimized DB session table for instant logout revocations.
+
+### 🌐 Public vs. Unlisted Visibility Modes
+*   **Public Forms:** Indexed and visible to anyone in explore templates/galleries.
+*   **Unlisted Forms:** Hidden from explore lists. Only accessible through direct links.
+*   **Unpublished Drafts:** Gracefully handled with descriptive preview barriers and will not ingest public responses.
 
 ---
 
-## 🔑 Demo Credentials (Quick Sign-In)
-To facilitate immediate judging and testing, the application comes equipped with a custom, highly secure **Demo Sign-In** flow on the login page:
-1. Visit the **Login Page** at `/login` (or try to enter the `/dashboard` directly).
-2. Look for the **Or Use Demo Credentials** form.
-3. Enter any Name (e.g. `Judge`) and Email (e.g. `judge@hackathon.com`).
-4. Click **Quick Demo Sign In**! The backend will instantly resolve the profile, issue secure cookies, and redirect you directly to the protected creator dashboard.
+## 🔑 Demo Credentials (Immediate Judging Access)
+To let you test the system instantly, the login flow comes with a premium **Demo Login** credential:
+1. Navigate to `/login` (or try visiting `/dashboard` directly to invoke the automatic Auth Redirect Guard).
+2. Enter any **Name** (e.g. `Judge`) and **Email** (e.g. `judge@streamyst.com`).
+3. Click **Quick Demo Sign In**.
+4. The system will automatically seed your profile, issue your secure cookies, and redirect you to your workspace!
 
 ---
 
-## 📖 Scalar API Reference
-API documentation is automatically generated using `trpc-to-openapi` and served interactively via the **Scalar API Reference Portal**:
-* **OpenAPI Spec**: `http://localhost:10000/openapi.json`
-* **Scalar Portal**: `http://localhost:10000/reference`
+## 📂 Project Directory Structure
 
-The portal provides an interactive, beautiful playground where you can view schemas and test tRPC routes directly.
+```text
+├── apps
+│   ├── api          # Express backend serving tRPC routers & Scalar documentation
+│   └── web          # Next.js App Router frontend client application
+└── packages
+    ├── database     # Drizzle ORM client, PG schema definitions & SQL migrations
+    ├── schemas      # Shared frontend/backend Zod validation schemas
+    ├── services     # Core business services (Auth verification, Form CRUD, Ingestion)
+    └── trpc         # Shared tRPC server router configurations & procedure definitions
+```
 
 ---
 
 ## 🛠️ Getting Started (Local Development)
 
 ### 1. Install Dependencies
-Make sure you have `pnpm` installed, then run:
+Ensure you have `pnpm` installed globally:
 ```bash
 pnpm install
 ```
 
 ### 2. Configure Environment Variables
-Inside `apps/api/.env`, ensure you have your Neon Database URL and JWT settings set:
+Create an `.env` file inside `apps/api/.env` and specify:
 ```env
-DATABASE_URL=postgresql://neondb_owner:...
-JWT_SECRET=chai-forms-secret-key-12345-very-long-key-for-jwt-signing
+DATABASE_URL=postgresql://neondb_owner:... # Your PostgreSQL link
+JWT_SECRET=streamyst-super-secret-jwt-signing-key-12345-very-long-and-secure
 ```
 
 ### 3. Run Development Servers
-Launch both the frontend client and the backend API server in development mode:
+Start the full Monorepo environment:
 ```bash
 pnpm dev
 ```
-* **Frontend client**: `http://localhost:3000`
-* **Backend API server**: `http://localhost:10000`
+*   **Frontend web client:** `http://localhost:3000`
+*   **Backend tRPC & Express API:** `http://localhost:10000`
 
-### 4. Database Setup & Migrations
-To push the database schema or run migrations using Drizzle, run:
+### 4. Database Setup & Schema Management
+Push schema designs to your cloud database with Drizzle:
 ```bash
 pnpm db:generate
 pnpm db:migrate
 ```
 
-### 5. Verify & Run Diagnostics
-To verify type safety across both frontend and backend packages:
+### 5. Diagnostics & Type Safety Validation
+Run rigorous workspace type checks to confirm compile stability:
 ```bash
-# Run global workspace type checks
 pnpm check-types
-
-# Verify strict type safety inside the API server
-cd apps/api && npx tsc --noEmit
 ```
 
 ---
 
-## 📂 Project Directory Structure
-```
-├── apps
-│   ├── api          # Express backend serving tRPC routes & Scalar docs
-│   └── web          # Next.js App Router frontend client
-└── packages
-    ├── database     # Drizzle DB clients, schemas, & migrations
-    ├── schemas      # Shared frontend/backend Zod validation schemas
-    ├── services     # Core business services (Auth, Forms, Fields)
-    └── trpc         # Shared tRPC server router context & procedures
-```
+## 📖 Scalar API Reference Portal
+All endpoint schemas are compiled into an OpenAPI Specification and beautifully rendered for developer usage:
+*   **OpenAPI Specs (JSON):** `http://localhost:10000/openapi.json`
+*   **Interactive Reference Portal:** `http://localhost:10000/reference`
