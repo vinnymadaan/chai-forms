@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { ArrowUpRight, FileText, Plus, Sparkles } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserMenu } from '@/components/user-menu';
 
 import { trpc } from '~/trpc/client';
 
@@ -44,6 +45,8 @@ export default function DashboardPage() {
 
           <div className="flex items-center gap-3">
             <ThemeToggle />
+
+            <UserMenu />
 
             <Link
               href="/dashboard/create"

@@ -7,6 +7,7 @@ import { use } from 'react';
 import { CheckCircle2, Copy, Eye, Plus, Trash2 } from 'lucide-react';
 
 import { ThemeToggle } from '@/components/theme-toggle';
+import { UserMenu } from '@/components/user-menu';
 
 import { trpc } from '~/trpc/client';
 
@@ -138,7 +139,11 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
             <h1 className="font-space-grotesk text-xl font-bold">Streamyst</h1>
           </div>
 
-          <ThemeToggle />
+          <div className="flex items-center gap-3">
+            <ThemeToggle />
+
+            <UserMenu />
+          </div>
         </div>
       </nav>
 
