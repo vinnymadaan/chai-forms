@@ -12,6 +12,14 @@ import { trpc } from '~/trpc/client';
 
 import { toast } from 'sonner';
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '~/components/ui/select';
+
 interface FormEditorPageProps {
   params: Promise<{
     id: string;
@@ -153,14 +161,15 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
 
               <input
                 defaultValue={form.title}
+                placeholder="Enter form title..."
                 onBlur={(e) => {
                   updateFormMutation.mutateAsync({
                     formId: form.id,
 
-                    title: e.target.value,
+                    title: e.target.value || 'Untitled Form',
                   });
                 }}
-                className="mt-6 w-full bg-transparent font-space-grotesk text-5xl font-bold tracking-tight outline-none lg:text-6xl"
+                className="mt-6 w-full bg-transparent font-space-grotesk text-5xl font-bold tracking-tight outline-none lg:text-6xl border-b border-dashed border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-zinc-500 dark:focus:border-zinc-400 transition-all pb-2"
               />
 
               <textarea
@@ -173,7 +182,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                   });
                 }}
                 placeholder="Describe your form..."
-                className="mt-5 w-full resize-none bg-transparent text-lg leading-8 text-zinc-500 outline-none dark:text-zinc-400"
+                className="mt-5 w-full resize-none bg-transparent text-lg leading-8 text-zinc-500 outline-none dark:text-zinc-400 border-b border-dashed border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-zinc-500 dark:focus:border-zinc-400 transition-all pb-1"
               />
             </div>
 
@@ -272,42 +281,44 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                   <div className="flex-1">
                     <input
                       defaultValue={field.label}
+                      placeholder="Enter question title..."
                       onBlur={(e) => {
                         updateFieldMutation.mutateAsync({
                           fieldId: field.id,
 
-                          label: e.target.value,
+                          label: e.target.value || 'Untitled Question',
                         });
                       }}
-                      className="w-full bg-transparent font-space-grotesk text-3xl font-bold tracking-tight outline-none"
+                      className="w-full bg-transparent font-space-grotesk text-3xl font-bold tracking-tight outline-none border-b border-dashed border-transparent hover:border-zinc-300 dark:hover:border-zinc-700 focus:border-zinc-500 dark:focus:border-zinc-400 transition-all pb-1"
                     />
 
                     <div className="mt-5 flex flex-wrap items-center gap-4">
-                      <select
+                      <Select
                         value={field.type}
-                        onChange={(e) => {
+                        onValueChange={(value) => {
                           updateFieldMutation.mutateAsync({
                             fieldId: field.id,
 
-                            type: e.target.value as
+                            type: value as
                               | 'short_text'
                               | 'long_text'
                               | 'email'
                               | 'number',
                           });
                         }}
-                        className="rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm outline-none dark:border-zinc-800 dark:bg-zinc-950"
                       >
-                        <option value="short_text">Short Text</option>
+                        <SelectTrigger className="w-[180px] rounded-2xl border border-zinc-200 bg-white px-4 py-3 text-sm font-medium outline-none transition focus-visible:ring-0 focus-visible:border-black dark:border-zinc-800 dark:bg-zinc-950 dark:focus-visible:border-white h-auto dark:text-white dark:hover:bg-zinc-900 select-none cursor-pointer">
+                          <SelectValue placeholder="Select type" />
+                        </SelectTrigger>
+                        <SelectContent position="popper" className="rounded-2xl border border-zinc-200 bg-white p-2 shadow-xl dark:border-zinc-800 dark:bg-zinc-950 select-none z-50">
+                          <SelectItem value="short_text" className="rounded-xl px-4 py-3 text-sm focus:bg-zinc-100 dark:focus:bg-zinc-900 cursor-pointer text-zinc-950 dark:text-zinc-50 focus:text-zinc-950 dark:focus:text-zinc-50">Short Text</SelectItem>
+                          <SelectItem value="long_text" className="rounded-xl px-4 py-3 text-sm focus:bg-zinc-100 dark:focus:bg-zinc-900 cursor-pointer text-zinc-950 dark:text-zinc-50 focus:text-zinc-950 dark:focus:text-zinc-50">Long Text</SelectItem>
+                          <SelectItem value="email" className="rounded-xl px-4 py-3 text-sm focus:bg-zinc-100 dark:focus:bg-zinc-900 cursor-pointer text-zinc-950 dark:text-zinc-50 focus:text-zinc-950 dark:focus:text-zinc-50">Email</SelectItem>
+                          <SelectItem value="number" className="rounded-xl px-4 py-3 text-sm focus:bg-zinc-100 dark:focus:bg-zinc-900 cursor-pointer text-zinc-950 dark:text-zinc-50 focus:text-zinc-950 dark:focus:text-zinc-50">Number</SelectItem>
+                        </SelectContent>
+                      </Select>
 
-                        <option value="long_text">Long Text</option>
-
-                        <option value="email">Email</option>
-
-                        <option value="number">Number</option>
-                      </select>
-
-                      <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm dark:border-zinc-800 dark:bg-zinc-950">
+                      <label className="flex items-center gap-3 rounded-2xl border border-zinc-200 bg-zinc-50 px-4 py-3 text-sm dark:border-zinc-800 dark:bg-zinc-950 cursor-pointer select-none">
                         <input
                           type="checkbox"
                           checked={field.required}
@@ -318,6 +329,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                               required: e.target.checked,
                             });
                           }}
+                          className="cursor-pointer"
                         />
                         Required
                       </label>
@@ -328,7 +340,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                         <input
                           disabled
                           placeholder="Short text answer"
-                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950"
+                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950 cursor-not-allowed opacity-60"
                         />
                       )}
 
@@ -336,7 +348,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                         <textarea
                           disabled
                           placeholder="Long text answer"
-                          className="min-h-[140px] w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950"
+                          className="min-h-[140px] w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950 cursor-not-allowed opacity-60"
                         />
                       )}
 
@@ -345,7 +357,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                           disabled
                           type="email"
                           placeholder="Email answer"
-                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950"
+                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950 cursor-not-allowed opacity-60"
                         />
                       )}
 
@@ -354,7 +366,7 @@ export default function FormEditorPage({ params }: FormEditorPageProps) {
                           disabled
                           type="number"
                           placeholder="Number answer"
-                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950"
+                          className="w-full rounded-2xl border border-zinc-200 bg-zinc-50 px-5 py-4 dark:border-zinc-800 dark:bg-zinc-950 cursor-not-allowed opacity-60"
                         />
                       )}
                     </div>
